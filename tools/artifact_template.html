@@ -1,0 +1,390 @@
+<title>Arbitrage Monitor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,500..800&family=JetBrains+Mono:wght@400;600&family=Source+Sans+3:wght@400;600&display=swap">
+<style>
+/* Layout: trading-blotter. Header strip, today's trade tickets, then the full book with a detail drawer. */
+:root {
+  --bg: #f4f5f2;
+  --panel: #fbfbf9;
+  --line: #dcded7;
+  --ink: #111512;
+  --ink-2: #4c524d;
+  --ink-3: #7b817c;
+  --accent: #1f5fbf;
+  --accent-ink: #ffffff;
+  --buy: #0b7a3b;  --buy-bg: #e1f2e6;
+  --sell: #b42b22; --sell-bg: #fae6e3;
+  --warn: #8a5800; --warn-bg: #fbeed2;
+  --hover: #eaf0f9;
+  --series: #1f5fbf;
+  --band: #b3b8b0;
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-data: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1210; --panel: #171b18; --line: #2b312c; --ink: #f1f3ef; --ink-2: #b9bfb8; --ink-3: #8a918a;
+    --accent: #4a8ff0; --accent-ink: #0b0f0c;
+    --buy: #5fd48e; --buy-bg: #14301f; --sell: #ff8b80; --sell-bg: #3a1b18; --warn: #f0c261; --warn-bg: #362a10;
+    --hover: #1b2636; --series: #4a8ff0; --band: #565d57;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1210; --panel: #171b18; --line: #2b312c; --ink: #f1f3ef; --ink-2: #b9bfb8; --ink-3: #8a918a;
+  --accent: #4a8ff0; --accent-ink: #0b0f0c;
+  --buy: #5fd48e; --buy-bg: #14301f; --sell: #ff8b80; --sell-bg: #3a1b18; --warn: #f0c261; --warn-bg: #362a10;
+  --hover: #1b2636; --series: #4a8ff0; --band: #565d57;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 15px/1.45 var(--f-body); }
+.wrap { max-width: 1320px; margin: 0 auto; padding-inline: 16px; padding-block: 18px 40px; display: grid; gap: 22px; }
+.num, td.num, .mono { font-family: var(--f-data); font-variant-numeric: tabular-nums; font-size: 13px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; }
+.eyebrow { font: 600 11px/1 var(--f-body); letter-spacing: .09em; text-transform: uppercase; color: var(--ink-3); }
+
+/* header */
+.head { display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: end; justify-content: space-between; border-bottom: 2px solid var(--ink); padding-bottom: 14px; }
+.head h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 800; font-stretch: 78%; letter-spacing: -.01em; line-height: 1; }
+.head .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--ink-2); font-size: 13px; margin-top: 8px; }
+.head .meta b { color: var(--ink); font-weight: 600; }
+.actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.btn { display: inline-flex; align-items: center; gap: 6px; font: 600 14px var(--f-body); padding: 8px 14px; border-radius: 6px; text-decoration: none; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn:focus-visible, .tab:focus-visible, tr:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* summary strip */
+.strip { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+.strip > div { padding: 12px 14px; border-left: 1px solid var(--line); min-width: 0; }
+.strip > div:first-child { border-left: 0; }
+.strip .v { font: 700 28px/1.1 var(--f-display); font-stretch: 85%; margin-top: 4px; }
+.strip .v small { font: 400 13px var(--f-data); color: var(--ink-3); margin-left: 4px; }
+@media (max-width: 720px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .strip > div { border-left: 0; border-top: 1px solid var(--line); } .strip > div:first-child { grid-column: 1 / -1; border-top: 0; } }
+
+/* trade tickets */
+.section-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 10px; }
+.section-h h2 { font-size: 20px; font-weight: 700; font-stretch: 85%; }
+.tickets { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 12px; }
+.ticket { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 14px; display: grid; gap: 10px; cursor: pointer; text-align: left; font: inherit; color: inherit; }
+.ticket:hover { border-color: var(--accent); }
+.ticket .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.ticket .name { font: 700 22px/1.1 var(--f-display); font-stretch: 82%; }
+.legs-line { display: flex; flex-wrap: wrap; gap: 6px; }
+.leg { font: 600 12px var(--f-data); padding: 3px 8px; border-radius: 4px; }
+.leg.BUY { background: var(--buy-bg); color: var(--buy); }
+.leg.SELL { background: var(--sell-bg); color: var(--sell); }
+.kv { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; border-top: 1px dashed var(--line); padding-top: 10px; }
+.kv .k { font-size: 11px; color: var(--ink-3); text-transform: uppercase; letter-spacing: .06em; }
+.kv .v { font: 600 15px var(--f-data); }
+.ticket .note { font-size: 13px; color: var(--ink-2); }
+
+/* book */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+.tab { font: 600 13px var(--f-body); padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel); color: var(--ink-2); cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.filters { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.check { font-size: 13px; color: var(--ink-2); display: flex; gap: 6px; align-items: center; }
+input[type=search] { font: 14px var(--f-body); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); color: var(--ink); width: 180px; max-width: 100%; }
+.book { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+.book.open { grid-template-columns: minmax(0, 1fr) 400px; }
+@media (max-width: 1000px) { .book.open { grid-template-columns: minmax(0, 1fr); } }
+.table-wrap { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; overflow-x: auto; min-width: 0; }
+table { border-collapse: collapse; width: 100%; }
+#grid th, #grid td { padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; text-align: left; }
+#grid th { font: 600 11px var(--f-body); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-3); }
+#grid th.num, #grid td.num { text-align: right; }
+#grid tbody tr { cursor: pointer; }
+#grid tbody tr:hover, #grid tbody tr.sel { background: var(--hover); }
+#grid tbody tr.dim td { color: var(--ink-3); }
+.strat { font: 600 11px var(--f-body); letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+.badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font: 600 12px var(--f-body); background: var(--line); color: var(--ink-2); }
+.badge.on { background: var(--buy-bg); color: var(--buy); }
+.badge.warn { background: var(--warn-bg); color: var(--warn); }
+.pos { color: var(--buy); } .neg { color: var(--sell); }
+#grid tbody tr.dim td.pos { color: var(--buy); }
+@media (max-width: 640px) { .hide-sm { display: none; } }
+.empty { padding: 20px; text-align: center; color: var(--ink-3); }
+
+/* drawer */
+.drawer { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 16px; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); display: grid; gap: 12px; min-width: 0; }
+.drawer-h { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+.drawer h3 { font-size: 24px; font-weight: 800; font-stretch: 80%; margin-top: 2px; }
+.x { background: transparent; border: 1px solid var(--line); color: var(--ink); border-radius: 6px; width: 32px; height: 32px; cursor: pointer; font-size: 16px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.chart .axis { fill: var(--ink-3); font: 10px var(--f-data); }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .band { stroke: var(--band); stroke-width: 1; stroke-dasharray: 4 3; }
+.chart .area { fill: var(--series); opacity: .08; }
+.chart .line { fill: none; stroke: var(--series); stroke-width: 2; stroke-linejoin: round; }
+.chart .dot { fill: var(--series); stroke: var(--panel); stroke-width: 2; }
+.chart .cross { stroke: var(--ink-2); stroke-width: 1; }
+.cap { font-size: 12px; color: var(--ink-3); margin-bottom: 4px; }
+.legs td, .legs th { padding: 5px 6px; border-bottom: 1px solid var(--line); font-size: 13px; text-align: left; }
+.legs th { font: 600 11px var(--f-body); text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); }
+.legs .num { text-align: right; }
+.metrics { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 12px; margin: 0; font-size: 13px; }
+.metrics dt { color: var(--ink-2); }
+.metrics dd { margin: 0; text-align: right; font-family: var(--f-data); overflow-wrap: anywhere; }
+.metrics a { color: var(--accent); }
+.warnlist { margin: 0; padding-left: 18px; color: var(--warn); font-size: 13px; }
+.tip { position: fixed; pointer-events: none; background: var(--ink); color: var(--bg); padding: 4px 8px; border-radius: 4px; font: 12px var(--f-data); z-index: 20; }
+
+.method { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px 24px; border-top: 2px solid var(--ink); padding-top: 16px; }
+.method h3 { font-size: 16px; font-weight: 700; font-stretch: 85%; margin-bottom: 4px; }
+.method p { margin: 0; font-size: 14px; color: var(--ink-2); max-width: 65ch; }
+.fine { font-size: 13px; color: var(--ink-3); max-width: 90ch; margin: 0; }
+@media (prefers-reduced-motion: no-preference) { .ticket, .tab, .btn { transition: border-color .15s, background .15s; } }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">NYSE · Nasdaq relative value</div>
+      <h1>Arbitrage Monitor</h1>
+      <div class="meta">
+        <span>Close of <b id="m-date"></b></span>
+        <span>Calibrated <b id="m-asof"></b></span>
+        <span><b id="m-total"></b> spreads monitored</span>
+      </div>
+    </div>
+    <div class="actions">
+      <a class="btn" href="__LIVE_URL__" target="_blank" rel="noopener">Open live app ↗</a>
+      <a class="btn ghost" href="https://github.com/4chen8/Arbitrage" target="_blank" rel="noopener">Source on GitHub ↗</a>
+    </div>
+  </header>
+
+  <section class="strip" id="strip" aria-label="Signal counts"></section>
+
+  <section aria-labelledby="t-h">
+    <div class="section-h">
+      <h2 id="t-h">Today's active trades</h2>
+      <span class="fine">|z| ≥ 2 or merger spread ≥ 8% annualized, after estimated costs</span>
+    </div>
+    <div class="tickets" id="tickets"></div>
+  </section>
+
+  <section aria-labelledby="b-h">
+    <div class="section-h"><h2 id="b-h">Full book</h2></div>
+    <div class="controls">
+      <div class="tabs" role="tablist" id="tabs">
+        <button role="tab" class="tab" data-s="" aria-selected="true">All</button>
+        <button role="tab" class="tab" data-s="equivalent" aria-selected="false">Share class &amp; ETF</button>
+        <button role="tab" class="tab" data-s="adr" aria-selected="false">ADR</button>
+        <button role="tab" class="tab" data-s="pairs" aria-selected="false">Stat-arb pairs</button>
+        <button role="tab" class="tab" data-s="merger" aria-selected="false">Merger</button>
+      </div>
+      <div class="filters">
+        <label class="check"><input type="checkbox" id="active-only"> Active only</label>
+        <input type="search" id="q" placeholder="Filter by ticker" aria-label="Filter by ticker">
+      </div>
+    </div>
+    <div class="book" id="book">
+      <div class="table-wrap">
+        <table id="grid">
+          <thead><tr>
+            <th class="hide-sm">Strategy</th><th>Instrument</th><th>Signal</th>
+            <th class="num" title="Z-score of the spread; annualized return for merger deals">Z / Ann.</th>
+            <th class="num" title="Deviation from the spread's mean; gross spread to deal value for mergers">Dev. / Spread</th>
+            <th class="num" title="Expected capture minus estimated round-trip costs">Net edge</th>
+            <th class="num hide-sm">Detail</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+        <p id="empty" class="empty" hidden>No spreads match these filters.</p>
+      </div>
+      <aside class="drawer" id="drawer" hidden>
+        <div class="drawer-h">
+          <div><div class="eyebrow" id="d-strat"></div><h3 id="d-name"></h3></div>
+          <button class="x" id="d-close" aria-label="Close details">✕</button>
+        </div>
+        <div id="d-signal"></div>
+        <div class="chart"><div class="cap" id="d-cap"></div><div id="d-chart"></div></div>
+        <table class="legs"><thead><tr><th>Leg</th><th>Side</th><th class="num">Qty per unit</th><th class="num">Price</th></tr></thead><tbody id="d-legs"></tbody></table>
+        <dl class="metrics" id="d-metrics"></dl>
+        <p class="fine" id="d-notes"></p>
+        <ul class="warnlist" id="d-warn"></ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="method" aria-label="Method">
+    <div><h3>Share class &amp; ETF twins</h3><p>Two listings with the same claim (GOOGL/GOOG, BRK-A/BRK-B, SPY/IVV). Trades the log price ratio against its 60-day mean.</p></div>
+    <div><h3>ADR vs home line</h3><p>US listing against the home-market share at live FX. Structural premia such as TSMC's are expected; only moves away from the 60-day mean count.</p></div>
+    <div><h3>Stat-arb pairs</h3><p>Same-industry stocks that pass cointegration (p &lt; 0.05), revert within 40 days and keep a stable hedge ratio.</p></div>
+    <div><h3>Merger arbitrage</h3><p>Target price against deal value (cash plus acquirer shares). Annualized to the estimated close date.</p></div>
+  </section>
+  <p class="fine">This page is a snapshot of the end-of-day scan. The live app re-prices every signal each minute during market hours. Signals come from public, possibly delayed Yahoo Finance data and are not risk-free: spreads can widen, deals can break, borrow can be unavailable and foreign lines can be closed. Check prices and deal terms with your broker before trading.</p>
+</div>
+<div class="tip" id="tip" hidden></div>
+
+<script id="snapshot" type="application/json">__DATA__</script>
+<script>
+"use strict";
+const DATA = JSON.parse(document.getElementById("snapshot").textContent);
+const LABELS = { equivalent: "Share class / ETF", adr: "ADR", pairs: "Stat-arb", merger: "Merger" };
+const S = { strategy: "", activeOnly: false, q: "", selected: null };
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (v, d = 2) => (v === null || v === undefined || Number.isNaN(v) ? "—" : Number(v).toFixed(d));
+const signed = (v, d = 2) => (v === null || v === undefined ? "—" : (v > 0 ? "+" : "") + Number(v).toFixed(d));
+const opps = DATA.opportunities;
+
+$("#m-date").textContent = DATA.data_through;
+$("#m-asof").textContent = DATA.as_of;
+$("#m-total").textContent = DATA.summary.total;
+
+const by = DATA.summary.by_strategy;
+$("#strip").innerHTML = [
+  `<div><div class="eyebrow">Active signals</div><div class="v">${DATA.summary.active}<small>/ ${DATA.summary.total}</small></div></div>`,
+  ...Object.keys(LABELS).map((k) => `<div><div class="eyebrow">${LABELS[k]}</div><div class="v">${by[k]?.active ?? 0}<small>/ ${by[k]?.candidates ?? 0}</small></div></div>`),
+].join("");
+
+function mainStat(o) {
+  if (o.strategy === "merger") return `${fmt(o.metrics.annualized_pct, 1)}%`;
+  return `<span class="${o.zscore > 0 ? "neg" : o.zscore < 0 ? "pos" : ""}">${signed(o.zscore)}</span>`;
+}
+function dev(o) {
+  if (o.strategy === "merger") return `${signed(o.metrics.gross_spread_pct)}%`;
+  return o.metrics.dev_pct === undefined ? "—" : `${signed(o.metrics.dev_pct)}%`;
+}
+function info(o) {
+  if (o.strategy === "pairs") return `t½ ${fmt(o.metrics.half_life_days, 1)}d · p ${fmt(o.metrics.coint_pvalue, 3)}`;
+  if (o.strategy === "merger") return `${o.metrics.days_to_close}d to close`;
+  if (o.strategy === "adr" || o.metrics.kind === "share_class") return `prem ${signed(o.metrics.premium_pct)}% · avg ${signed(o.metrics.mean_premium_pct)}%`;
+  return "ETF twin";
+}
+function badge(o) {
+  const cls = o.active ? "on" : /ABOVE|below cost/.test(o.signal) ? "warn" : "";
+  return `<span class="badge ${cls}">${esc(o.signal)}</span>`;
+}
+const tradeLegs = (o) => o.legs.filter((l) => l.side === "BUY" || l.side === "SELL");
+
+// tickets
+const active = opps.filter((o) => o.active);
+$("#tickets").innerHTML = active.length ? active.map((o) => {
+  const statK = o.strategy === "merger" ? "Annualized" : "Z-score";
+  const second = o.strategy === "pairs" ? ["Half-life", `${fmt(o.metrics.half_life_days, 1)}d`]
+    : o.strategy === "merger" ? ["Spread", `${signed(o.metrics.gross_spread_pct)}%`]
+    : ["Premium", `${signed(o.metrics.premium_pct)}%`];
+  return `<button class="ticket" data-id="${esc(o.id)}">
+    <div class="top"><span class="eyebrow">${LABELS[o.strategy]}</span><span class="eyebrow">${esc(o.metrics.group || "")}</span></div>
+    <div class="name">${esc(o.name)}</div>
+    <div class="legs-line">${tradeLegs(o).map((l) => `<span class="leg ${l.side}">${l.side} ${esc(l.symbol)}</span>`).join("")}</div>
+    <div class="kv">
+      <div><div class="k">${statK}</div><div class="v">${o.strategy === "merger" ? fmt(o.metrics.annualized_pct, 1) + "%" : signed(o.zscore)}</div></div>
+      <div><div class="k">${second[0]}</div><div class="v">${second[1]}</div></div>
+      <div><div class="k">Net edge</div><div class="v">${fmt(o.net_edge_bps, 0)} bp</div></div>
+    </div>
+    <div class="note">${esc(o.notes)}</div>
+  </button>`;
+}).join("") : `<p class="fine">No spread cleared the entry threshold at this close.</p>`;
+$("#tickets").addEventListener("click", (e) => {
+  const t = e.target.closest(".ticket"); if (!t) return;
+  openDetail(opps.find((o) => o.id === t.dataset.id));
+  $("#book").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+});
+
+// table
+function rows() {
+  const q = S.q.trim().toUpperCase();
+  return opps.filter((o) => (!S.strategy || o.strategy === S.strategy) && (!S.activeOnly || o.active)
+    && (!q || o.legs.some((l) => l.symbol.toUpperCase().includes(q))));
+}
+function renderTable() {
+  const r = rows();
+  $("#empty").hidden = r.length > 0;
+  $("#grid tbody").innerHTML = r.map((o) => `<tr tabindex="0" data-id="${esc(o.id)}" class="${o.active ? "" : "dim"} ${o.id === S.selected ? "sel" : ""}">
+    <td class="strat hide-sm">${LABELS[o.strategy]}</td><td>${esc(o.name)}</td><td>${badge(o)}</td>
+    <td class="num">${mainStat(o)}</td><td class="num">${dev(o)}</td>
+    <td class="num ${o.net_edge_bps > 0 ? "pos" : ""}">${fmt(o.net_edge_bps, 0)} bp</td>
+    <td class="num hide-sm">${info(o)}</td></tr>`).join("");
+}
+function pick(e) {
+  const tr = e.target.closest("tr[data-id]"); if (!tr) return;
+  openDetail(opps.find((o) => o.id === tr.dataset.id));
+}
+$("#grid tbody").addEventListener("click", pick);
+$("#grid tbody").addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); pick(e); } });
+$("#tabs").addEventListener("click", (e) => {
+  const b = e.target.closest(".tab"); if (!b) return;
+  document.querySelectorAll(".tab").forEach((t) => t.setAttribute("aria-selected", String(t === b)));
+  S.strategy = b.dataset.s; renderTable();
+});
+$("#active-only").addEventListener("change", (e) => { S.activeOnly = e.target.checked; renderTable(); });
+$("#q").addEventListener("input", (e) => { S.q = e.target.value; renderTable(); });
+$("#d-close").addEventListener("click", () => { S.selected = null; $("#drawer").hidden = true; $("#book").classList.remove("open"); renderTable(); });
+
+// detail
+function openDetail(o) {
+  if (!o) return;
+  S.selected = o.id;
+  $("#drawer").hidden = false; $("#book").classList.add("open");
+  $("#d-strat").textContent = LABELS[o.strategy] + (o.metrics.group ? " · " + o.metrics.group : "");
+  $("#d-name").textContent = o.name;
+  $("#d-signal").innerHTML = `${badge(o)} <span class="fine">gross ${fmt(o.edge_bps, 0)} bp · net ${fmt(o.net_edge_bps, 0)} bp</span>`;
+  const h = o.history || { dates: [], values: [] };
+  let cap, bands, unit = "";
+  if (o.strategy === "merger") { cap = "Spread to deal value, % (since announcement)"; bands = [0]; unit = "%"; }
+  else if (o.strategy === "adr") { const m = o.params.mean * 100, s = o.params.std * 100; cap = "ADR premium to home line, % (dashed: mean ± 2σ)"; bands = [m - 2 * s, m, m + 2 * s]; unit = "%"; }
+  else { cap = "Spread z-score (dashed: entry at ±2)"; bands = [-2, 0, 2]; }
+  $("#d-cap").textContent = cap;
+  $("#d-chart").innerHTML = chart(h.dates, h.values, bands, unit);
+  bindChart(h.dates, h.values, unit);
+  $("#d-legs").innerHTML = o.legs.map((l) => `<tr><td class="mono">${esc(l.symbol)}</td>
+    <td class="${l.side === "BUY" ? "pos" : l.side === "SELL" ? "neg" : ""}">${esc(l.side || "—")}</td>
+    <td class="num">${l.side === "FX" ? "hedge" : fmt(l.weight, 4)}</td><td class="num">${fmt(o.prices?.[l.symbol], 2)}</td></tr>`).join("");
+  const m = Object.entries(o.metrics || {}).filter(([k]) => !["source", "group", "kind"].includes(k));
+  $("#d-metrics").innerHTML = m.map(([k, v]) => `<dt>${esc(k.replace(/_/g, " "))}</dt><dd>${esc(typeof v === "number" ? +v.toFixed(4) : v)}</dd>`).join("")
+    + (o.metrics?.source ? `<dt>deal terms</dt><dd><a href="${esc(o.metrics.source)}" target="_blank" rel="noopener">source ↗</a></dd>` : "");
+  $("#d-notes").textContent = o.notes || "";
+  $("#d-warn").innerHTML = (o.warnings || []).map((w) => `<li>${esc(w)}</li>`).join("");
+  renderTable();
+}
+
+// chart: single series, faint grid, dashed thresholds, emphasized endpoint, hover crosshair
+const W = 400, H = 200, P = { l: 40, r: 10, t: 10, b: 22 };
+let sx, sy;
+function ticks(lo, hi, n) {
+  const s0 = (hi - lo) / n, mag = 10 ** Math.floor(Math.log10(s0));
+  const st = [1, 2, 2.5, 5, 10].map((x) => x * mag).find((x) => x >= s0);
+  const out = []; for (let t = Math.ceil(lo / st) * st; t <= hi + 1e-9; t += st) out.push(t); return out;
+}
+function chart(dates, vals, bands, unit) {
+  if (!vals.length) return `<p class="fine">No history.</p>`;
+  let lo = Math.min(...vals, ...bands), hi = Math.max(...vals, ...bands);
+  const pad = (hi - lo) * 0.08 || 1; lo -= pad; hi += pad;
+  sx = (i) => P.l + (i / Math.max(vals.length - 1, 1)) * (W - P.l - P.r);
+  sy = (v) => P.t + (1 - (v - lo) / (hi - lo)) * (H - P.t - P.b);
+  const g = ticks(lo, hi, 4).map((t) => `<line class="grid" x1="${P.l}" x2="${W - P.r}" y1="${sy(t)}" y2="${sy(t)}"/><text class="axis" x="${P.l - 4}" y="${sy(t) + 3}" text-anchor="end">${+t.toFixed(2)}${unit}</text>`).join("");
+  const b = bands.map((v) => `<line class="band" x1="${P.l}" x2="${W - P.r}" y1="${sy(v)}" y2="${sy(v)}"/>`).join("");
+  const pts = vals.map((v, i) => `${sx(i).toFixed(1)},${sy(v).toFixed(1)}`);
+  const base = sy(Math.max(lo, Math.min(hi, 0)));
+  const area = `M${sx(0)},${base} L${pts.join(" L")} L${sx(vals.length - 1)},${base} Z`;
+  const last = vals.length - 1;
+  const xl = [0, Math.floor(last / 2), last].map((i) => `<text class="axis" x="${sx(i)}" y="${H - 6}" text-anchor="${i === 0 ? "start" : i === last ? "end" : "middle"}">${dates[i].slice(5)}</text>`).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc($("#d-cap").textContent)}">${g}${b}<path class="area" d="${area}"/><path class="line" d="M${pts.join(" L")}"/>
+    <circle class="dot" r="4" cx="${sx(last)}" cy="${sy(vals[last])}"/>${xl}
+    <line class="cross" id="cross" y1="${P.t}" y2="${H - P.b}" visibility="hidden"/>
+    <rect id="hit" x="${P.l}" y="0" width="${W - P.l - P.r}" height="${H}" fill="transparent"/></svg>`;
+}
+function bindChart(dates, vals, unit) {
+  const svg = $("#d-chart svg"); if (!svg) return;
+  const hit = svg.querySelector("#hit"), cross = svg.querySelector("#cross"), tip = $("#tip");
+  const move = (x0, cx, cy) => {
+    const r = svg.getBoundingClientRect(), x = ((x0 - r.left) / r.width) * W;
+    const i = Math.max(0, Math.min(vals.length - 1, Math.round(((x - P.l) / (W - P.l - P.r)) * (vals.length - 1))));
+    cross.setAttribute("x1", sx(i)); cross.setAttribute("x2", sx(i)); cross.setAttribute("visibility", "visible");
+    tip.hidden = false; tip.textContent = `${dates[i]}  ${fmt(vals[i], 2)}${unit}`;
+    tip.style.left = Math.min(cx + 12, innerWidth - 150) + "px"; tip.style.top = cy - 30 + "px";
+  };
+  hit.addEventListener("pointermove", (e) => move(e.clientX, e.clientX, e.clientY));
+  hit.addEventListener("pointerleave", () => { cross.setAttribute("visibility", "hidden"); tip.hidden = true; });
+}
+
+renderTable();
+if (active.length) openDetail(active[0]);
+</script>

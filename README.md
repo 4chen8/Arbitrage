@@ -123,3 +123,9 @@ These are **statistical and event-driven** opportunities, not risk-free arbitrag
   India) restrict conversion, which is why their premia persist.
 * Merger spreads price the risk that the deal breaks, and this model does not.
 * Costs are a flat estimate and do not include borrow fees or hard-to-borrow constraints.
+
+## Snapshot artifact
+
+`python tools/build_artifact.py` builds a self-contained page from `data/opportunities.json`
+(to `build/arbitrage-monitor.html`). A weekday Claude routine rebuilds it after the daily scan
+and republishes it to the same claude.ai artifact link.
