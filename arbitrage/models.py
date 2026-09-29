@@ -90,3 +90,12 @@ def from_dict(d: dict[str, Any]) -> Opportunity:
     d = {k: v for k, v in d.items() if k in names}
     d["legs"] = [Leg(**leg) for leg in d.get("legs", [])]
     return Opportunity(**d)
+
+
+def summarize(opps: list[dict]) -> dict:
+    by = {}
+    for o in opps:
+        s = by.setdefault(o["strategy"], {"candidates": 0, "active": 0})
+        s["candidates"] += 1
+        s["active"] += int(o["active"])
+    return {"total": len(opps), "active": sum(o["active"] for o in opps), "by_strategy": by}

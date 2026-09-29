@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 
 from . import CONFIG_DIR, DATA_DIR
 from .data import PriceProvider, now_ny
+from .models import summarize
 from .strategies import adr, equivalent, merger, pairs
 
 log = logging.getLogger(__name__)
@@ -56,15 +57,6 @@ def run_scan(provider: PriceProvider | None = None, universe: dict | None = None
     if write:
         save(snapshot)
     return snapshot
-
-
-def summarize(opps: list[dict]) -> dict:
-    by = {}
-    for o in opps:
-        s = by.setdefault(o["strategy"], {"candidates": 0, "active": 0})
-        s["candidates"] += 1
-        s["active"] += int(o["active"])
-    return {"total": len(opps), "active": sum(o["active"] for o in opps), "by_strategy": by}
 
 
 def save(snapshot: dict) -> None:

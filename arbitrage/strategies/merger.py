@@ -11,10 +11,14 @@ from __future__ import annotations
 import json
 from datetime import date
 
-import pandas as pd
+
+from typing import TYPE_CHECKING
 
 from .. import CONFIG_DIR, settings
 from ..models import Leg, Opportunity, round_trip_cost_bps, tail_history
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 STRATEGY = "merger"
 
@@ -37,6 +41,8 @@ def deal_value(deal: dict, acq_px: float | None) -> float | None:
 
 
 def scan(closes: pd.DataFrame, deals: list[dict], as_of: str) -> list[Opportunity]:
+    import pandas as pd
+
     out = []
     for d in deals:
         t, acq = d["target"], d.get("acquirer")

@@ -1,0 +1,6 @@
+tests/
+data/archive/
+Dockerfile
+requirements-full.txt
+.github/
+*.md

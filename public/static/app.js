@@ -14,20 +14,24 @@ function connect() {
   es.addEventListener("snapshot", (e) => render(JSON.parse(e.data)));
   es.onerror = () => { es.close(); setTimeout(connect, 5000); poll(true); };
 }
+let pollMs = 30000;
 async function poll(once = false) {
   try {
     const r = await fetch("/api/opportunities");
     if (r.ok) render(await r.json());
     else $("#stamp").textContent = (await r.json()).detail || "waiting for first scan…";
   } catch { $("#stamp").textContent = "server unreachable"; }
-  if (!once) setTimeout(poll, 30000);
+  if (!once) setTimeout(poll, pollMs);
 }
 async function status() {
   try {
     const s = await (await fetch("/api/status")).json();
+    state.mode = s.mode;
     const m = $("#market");
     m.textContent = s.market_open ? "Market open" : "Market closed";
     m.classList.toggle("open", s.market_open);
+    // Serverless deployments recalibrate in GitHub Actions, not from the page.
+    $("#btn-scan").hidden = s.mode === "serverless";
     $("#btn-scan").disabled = s.scanning;
     $("#btn-scan").textContent = s.scanning ? "Scanning…" : "Run daily scan";
     if (s.last_error) $("#stamp").textContent = "⚠ " + s.last_error;
@@ -198,10 +202,16 @@ $("#d-close").addEventListener("click", () => {
 });
 $("#btn-refresh").addEventListener("click", async (e) => {
   e.target.disabled = true;
-  try { await fetch("/api/refresh", { method: "POST" }); } finally { e.target.disabled = false; }
+  try {
+    const body = await (await fetch("/api/refresh", { method: "POST" })).json();
+    if (body.opportunities) render(body);  // serverless: no stream, so render the reply
+  } finally { e.target.disabled = false; }
 });
 $("#btn-scan").addEventListener("click", async () => { await fetch("/api/scan", { method: "POST" }); status(); });
 
-connect();
-status();
+(async () => {
+  await status();
+  // Self-hosted server pushes updates over SSE; serverless (Vercel) is polled.
+  if (state.mode === "serverless") { pollMs = 60000; poll(); } else connect();
+})();
 setInterval(status, 15000);

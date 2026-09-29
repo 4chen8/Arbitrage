@@ -27,7 +27,7 @@ from .live import refresh
 from .scanner import load_snapshot, run_scan
 
 log = logging.getLogger(__name__)
-WEB_DIR = ROOT / "web"
+WEB_DIR = ROOT / "public"
 
 
 class State:
@@ -141,6 +141,7 @@ async def status():
         "last_error": state.last_error,
         "server_time": datetime.now(NY).isoformat(timespec="seconds"),
         "live_interval": settings.LIVE_INTERVAL_SECONDS,
+        "mode": "server",
     }
 
 
@@ -182,4 +183,4 @@ async def index():
     return FileResponse(WEB_DIR / "index.html")
 
 
-app.mount("/static", StaticFiles(directory=WEB_DIR), name="static")
+app.mount("/static", StaticFiles(directory=WEB_DIR / "static"), name="static")

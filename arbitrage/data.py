@@ -10,10 +10,11 @@ from __future__ import annotations
 
 import logging
 from datetime import datetime, time
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable
 from zoneinfo import ZoneInfo
 
-import pandas as pd
+if TYPE_CHECKING:
+    import pandas as pd
 
 log = logging.getLogger(__name__)
 NY = ZoneInfo("America/New_York")
@@ -49,6 +50,7 @@ class PriceProvider:
 
     def history(self, symbols: Iterable[str], days: int = 400) -> pd.DataFrame:
         """Daily closes (dividend/split adjusted), one column per symbol."""
+        import pandas as pd
         import yfinance as yf
 
         syms = _unique(symbols)
@@ -64,25 +66,15 @@ class PriceProvider:
         return closes
 
     def latest(self, symbols: Iterable[str]) -> dict[str, float]:
-        """Most recent trade price per symbol (1-minute bars, today)."""
-        import yfinance as yf
+        """Most recent trade price per symbol."""
+        from .quotes import fetch_latest
 
-        syms = _unique(symbols)
-        if not syms:
-            return {}
-        raw = yf.download(syms, period="5d", interval="1m", auto_adjust=False,
-                          progress=False, threads=True, group_by="column", prepost=False)
-        closes = _extract_close(raw, syms)
-        out: dict[str, float] = {}
-        for s in syms:
-            if s in closes:
-                col = closes[s].dropna()
-                if not col.empty:
-                    out[s] = float(col.iloc[-1])
-        return out
+        return fetch_latest(symbols)
 
 
 def _extract_close(raw: pd.DataFrame, syms: list[str]) -> pd.DataFrame:
+    import pandas as pd
+
     if raw is None or raw.empty:
         return pd.DataFrame()
     if isinstance(raw.columns, pd.MultiIndex):

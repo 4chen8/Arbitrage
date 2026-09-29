@@ -6,8 +6,7 @@ import logging
 from datetime import datetime, timezone
 
 from .data import PriceProvider, is_market_open
-from .models import from_dict
-from .scanner import summarize
+from .models import from_dict, summarize
 from .strategies import EVALUATORS
 
 log = logging.getLogger(__name__)

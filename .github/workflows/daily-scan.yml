@@ -6,7 +6,7 @@ on:
     - cron: "5 22 * * 1-5"
   workflow_dispatch:
   push:
-    paths: ["arbitrage/**", "tests/**", "config/**", "requirements.txt"]
+    paths: ["arbitrage/**", "tests/**", "config/**", "api/**", "requirements*.txt"]
 
 permissions:
   contents: write
@@ -24,7 +24,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements-full.txt
       - name: Tests
         run: python -m pytest -q
       - name: Scan

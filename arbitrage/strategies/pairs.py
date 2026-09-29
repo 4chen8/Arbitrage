@@ -13,12 +13,14 @@ import itertools
 import math
 import warnings
 
-import numpy as np
-import pandas as pd
-from statsmodels.tsa.stattools import coint
+
+from typing import TYPE_CHECKING
 
 from .. import settings
 from ..models import Leg, Opportunity, round_trip_cost_bps, spread_signal, tail_history
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 STRATEGY = "pairs"
 
@@ -27,12 +29,16 @@ def symbols(cfg: dict) -> list[str]:
     return [s for g in cfg["pairs_groups"]["groups"].values() for s in g]
 
 
-def _ols(y: np.ndarray, x: np.ndarray) -> tuple[float, float]:
+def _ols(y, x) -> tuple[float, float]:
+    import numpy as np
+
     beta, alpha = np.polyfit(x, y, 1)
     return float(alpha), float(beta)
 
 
 def half_life(resid: pd.Series) -> float:
+    import numpy as np
+
     lag = resid.shift(1).dropna()
     delta = resid.diff().dropna()
     lam = np.polyfit(lag.values, delta.values, 1)[0]
@@ -40,6 +46,8 @@ def half_life(resid: pd.Series) -> float:
 
 
 def test_pair(logp: pd.DataFrame, y: str, x: str) -> dict | None:
+    from statsmodels.tsa.stattools import coint
+
     df = logp[[y, x]].dropna()
     if len(df) < 120:
         return None
@@ -71,6 +79,8 @@ def test_pair(logp: pd.DataFrame, y: str, x: str) -> dict | None:
 
 
 def scan(closes: pd.DataFrame, cfg: dict, as_of: str) -> list[Opportunity]:
+    import numpy as np
+
     logp = np.log(closes.iloc[-settings.FORMATION_DAYS:])
     out: list[Opportunity] = []
     seen: set[frozenset] = set()

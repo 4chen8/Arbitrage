@@ -9,11 +9,14 @@ from __future__ import annotations
 
 import math
 
-import numpy as np
-import pandas as pd
+
+from typing import TYPE_CHECKING
 
 from .. import settings
 from ..models import Leg, Opportunity, round_trip_cost_bps, spread_signal, tail_history
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 STRATEGY = "equivalent"
 
@@ -27,6 +30,8 @@ def _pair_id(a: str, b: str) -> str:
 
 
 def scan(closes: pd.DataFrame, cfg: dict, as_of: str) -> list[Opportunity]:
+    import numpy as np
+
     out = []
     w = settings.ZSCORE_WINDOW
     for p in cfg["equivalent_pairs"]["pairs"]:

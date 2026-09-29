@@ -22,7 +22,7 @@ Exit zone is |z| ≤ 0.5.
 ## Quick start
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-full.txt
 python -m arbitrage.scanner                       # daily scan -> data/opportunities.json
 uvicorn arbitrage.server:app --host 0.0.0.0 --port 8000
 # open http://localhost:8000
@@ -33,6 +33,29 @@ or with Docker:
 ```bash
 docker build -t arb . && docker run -p 8000:8000 arb
 ```
+
+## Deploy on Vercel
+
+The repo deploys to Vercel as-is: `public/` is the static dashboard and `api/index.py`
+is a Python function serving `/api/*`. It needs only FastAPI (`requirements.txt`), so the
+bundle is about 50 MB.
+
+1. In Vercel, **Add New → Project → Import** `4chen8/Arbitrage`.
+2. Framework preset **Other**. Leave the build command and output directory empty, then
+   click **Deploy**.
+
+On Vercel, the pieces work like this:
+
+| | Self-hosted server | Vercel |
+|---|---|---|
+| Live prices | background loop every 60 s, pushed over SSE | each page poll (60 s) re-prices the snapshot; edge-cached ~1 min so viewers share fetches |
+| Daily recalibration | built-in 16:35 ET scheduler | GitHub Actions commits `data/opportunities.json` on weekdays, and the push triggers a Vercel redeploy |
+| *Run daily scan* button | runs the scan | hidden; use **Actions → Daily arbitrage scan → Run workflow** |
+
+Serverless functions have no persistent processes, so pandas, statsmodels and the
+scheduler stay out of Vercel. The live path uses only the standard library, fetching quotes
+in batches from Yahoo's spark endpoint (`arbitrage/quotes.py`). If Yahoo throttles
+Vercel's IPs, the page falls back to the end-of-day snapshot and shows the error.
 
 ## How it stays current
 
@@ -80,7 +103,9 @@ arbitrage/
   scanner.py         daily calibration -> data/opportunities.json (+ archive)
   live.py            intraday re-scoring
   server.py          FastAPI app, SSE stream, schedulers
-web/                 dashboard (vanilla JS, no build step)
+  quotes.py          dependency-free batched live quotes
+api/index.py         Vercel serverless entry point
+public/              dashboard (vanilla JS, no build step)
 config/              universe + merger deals
 tests/               synthetic-data tests (pytest)
 ```
