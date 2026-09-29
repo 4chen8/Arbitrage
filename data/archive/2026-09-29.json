@@ -1,0 +1,684 @@
+{
+ "as_of": "2026-09-29 16:49 EDT",
+ "summary": {
+  "total": 73,
+  "active": 3,
+  "by_strategy": {
+   "pairs": {
+    "candidates": 25,
+    "active": 1
+   },
+   "equivalent": {
+    "candidates": 17,
+    "active": 1
+   },
+   "merger": {
+    "candidates": 6,
+    "active": 1
+   },
+   "adr": {
+    "candidates": 25,
+    "active": 0
+   }
+  }
+ },
+ "opportunities": [
+  {
+   "id": "pairs:JPM/BAC",
+   "signal": "SELL JPM / BUY BAC",
+   "active": true,
+   "zscore": 2.905,
+   "edge_bps": 245.5,
+   "net_edge_bps": 225.5,
+   "score": 2.9053230784588564
+  },
+  {
+   "id": "equivalent:UAA/UA",
+   "signal": "BUY UAA / SELL UA",
+   "active": true,
+   "zscore": -2.599,
+   "edge_bps": 55.1,
+   "net_edge_bps": 35.1,
+   "score": 2.598991026249019
+  },
+  {
+   "id": "merger:PRTH",
+   "signal": "BUY PRTH",
+   "active": true,
+   "zscore": null,
+   "edge_bps": 333.8,
+   "net_edge_bps": 328.8,
+   "score": 0.1015
+  },
+  {
+   "id": "equivalent:TLT/SPTL",
+   "signal": "BUY TLT / SELL SPTL (below cost)",
+   "active": false,
+   "zscore": -2.202,
+   "edge_bps": 18.0,
+   "net_edge_bps": -2.0,
+   "score": 2.202221613806484
+  },
+  {
+   "id": "equivalent:GLD/IAU",
+   "signal": "BUY GLD / SELL IAU (below cost)",
+   "active": false,
+   "zscore": -2.191,
+   "edge_bps": 2.3,
+   "net_edge_bps": -17.7,
+   "score": 2.1911212649516636
+  },
+  {
+   "id": "adr:TSM/2330.TW",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 2.0,
+   "edge_bps": 218.6,
+   "net_edge_bps": 188.6,
+   "score": 1.999819724660058
+  },
+  {
+   "id": "equivalent:LEN/LEN-B",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.857,
+   "edge_bps": 20.0,
+   "net_edge_bps": -0.0,
+   "score": 1.857398454606945
+  },
+  {
+   "id": "equivalent:NWSA/NWS",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.82,
+   "edge_bps": 102.3,
+   "net_edge_bps": 82.3,
+   "score": 1.8198369417683498
+  },
+  {
+   "id": "pairs:PLD/O",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.816,
+   "edge_bps": 353.9,
+   "net_edge_bps": 333.9,
+   "score": 1.8155541796431758
+  },
+  {
+   "id": "pairs:JBHT/CSX",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.787,
+   "edge_bps": 547.3,
+   "net_edge_bps": 527.3,
+   "score": 1.7870641957630933
+  },
+  {
+   "id": "equivalent:HEI/HEI-A",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.739,
+   "edge_bps": 118.6,
+   "net_edge_bps": 98.6,
+   "score": 1.7386023424433774
+  },
+  {
+   "id": "adr:SONY/6758.T",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.574,
+   "edge_bps": 82.1,
+   "net_edge_bps": 52.1,
+   "score": 1.5744566942444096
+  },
+  {
+   "id": "pairs:PSA/WELL",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.461,
+   "edge_bps": 498.7,
+   "net_edge_bps": 478.7,
+   "score": 1.4614021645798867
+  },
+  {
+   "id": "adr:WIT/WIPRO.NS",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.455,
+   "edge_bps": 201.2,
+   "net_edge_bps": 171.2,
+   "score": 1.4546068096731417
+  },
+  {
+   "id": "pairs:MDLZ/KO",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.357,
+   "edge_bps": 303.2,
+   "net_edge_bps": 283.2,
+   "score": 1.3567795701431251
+  },
+  {
+   "id": "pairs:XEL/SO",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.356,
+   "edge_bps": 138.1,
+   "net_edge_bps": 118.1,
+   "score": 1.3560102119601676
+  },
+  {
+   "id": "pairs:AEP/SO",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.349,
+   "edge_bps": 243.4,
+   "net_edge_bps": 223.4,
+   "score": 1.348769690502823
+  },
+  {
+   "id": "adr:HSBC/HSBA.L",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.28,
+   "edge_bps": 39.0,
+   "net_edge_bps": 9.0,
+   "score": 1.2797129993833873
+  },
+  {
+   "id": "pairs:PSA/SPG",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -1.273,
+   "edge_bps": 286.3,
+   "net_edge_bps": 266.3,
+   "score": 1.2733199367431756
+  },
+  {
+   "id": "pairs:CNI/CSX",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.109,
+   "edge_bps": 124.0,
+   "net_edge_bps": 104.0,
+   "score": 1.1091038616006237
+  },
+  {
+   "id": "adr:RIO/RIO.L",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.092,
+   "edge_bps": 69.6,
+   "net_edge_bps": 39.6,
+   "score": 1.0923901973230499
+  },
+  {
+   "id": "equivalent:GOOGL/GOOG",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.027,
+   "edge_bps": 19.7,
+   "net_edge_bps": -0.3,
+   "score": 1.0268249204498998
+  },
+  {
+   "id": "adr:ASML/ASML.AS",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 1.009,
+   "edge_bps": 51.7,
+   "net_edge_bps": 21.7,
+   "score": 1.0088431584512678
+  },
+  {
+   "id": "pairs:JBHT/CP",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.985,
+   "edge_bps": 305.8,
+   "net_edge_bps": 285.8,
+   "score": 0.9846978563101951
+  },
+  {
+   "id": "pairs:UNP/CNI",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.926,
+   "edge_bps": 122.1,
+   "net_edge_bps": 102.1,
+   "score": 0.9263900681875851
+  },
+  {
+   "id": "equivalent:Z/ZG",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.921,
+   "edge_bps": 53.4,
+   "net_edge_bps": 33.4,
+   "score": 0.9214771011255699
+  },
+  {
+   "id": "pairs:HII/NOC",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.916,
+   "edge_bps": 252.7,
+   "net_edge_bps": 232.7,
+   "score": 0.9164745479497055
+  },
+  {
+   "id": "adr:UL/ULVR.L",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 0.753,
+   "edge_bps": 27.0,
+   "net_edge_bps": -3.0,
+   "score": 0.7529521012804195
+  },
+  {
+   "id": "pairs:CP/CSX",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.732,
+   "edge_bps": 102.3,
+   "net_edge_bps": 82.3,
+   "score": 0.7316479315693944
+  },
+  {
+   "id": "pairs:KLAC/AMAT",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.728,
+   "edge_bps": 218.6,
+   "net_edge_bps": 198.6,
+   "score": 0.7281243077786507
+  },
+  {
+   "id": "pairs:ICE/MKTX",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.713,
+   "edge_bps": 201.7,
+   "net_edge_bps": 181.7,
+   "score": 0.7127843721320604
+  },
+  {
+   "id": "equivalent:BF-B/BF-A",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.697,
+   "edge_bps": 13.9,
+   "net_edge_bps": -6.1,
+   "score": 0.697131293378125
+  },
+  {
+   "id": "adr:HDB/HDFCBANK.NS",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.672,
+   "edge_bps": 52.4,
+   "net_edge_bps": 22.4,
+   "score": 0.6717991377457599
+  },
+  {
+   "id": "equivalent:MOG-A/MOG-B",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": -0.62,
+   "edge_bps": 68.2,
+   "net_edge_bps": 48.2,
+   "score": 0.6199586357922957
+  },
+  {
+   "id": "adr:INFY/INFY.NS",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 0.598,
+   "edge_bps": 59.3,
+   "net_edge_bps": 29.3,
+   "score": 0.5978824232848635
+  },
+  {
+   "id": "pairs:DUK/SO",
+   "signal": "WATCH",
+   "active": false,
+   "zscore": 0.567,
+   "edge_bps": 35.2,
+   "net_edge_bps": 15.2,
+   "score": 0.567042133956527
+  },
+  {
+   "id": "adr:NVO/NOVO-B.CO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.484,
+   "edge_bps": 28.2,
+   "net_edge_bps": -1.8,
+   "score": 0.48374892820035476
+  },
+  {
+   "id": "adr:IBN/ICICIBANK.NS",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.473,
+   "edge_bps": 21.5,
+   "net_edge_bps": -8.5,
+   "score": 0.4728270630520246
+  },
+  {
+   "id": "equivalent:IWM/VTWO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.428,
+   "edge_bps": 0.4,
+   "net_edge_bps": -19.6,
+   "score": 0.42812232673677
+  },
+  {
+   "id": "equivalent:VOO/IVV",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.402,
+   "edge_bps": 0.3,
+   "net_edge_bps": -19.7,
+   "score": 0.4018473664386763
+  },
+  {
+   "id": "adr:BABA/9988.HK",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.398,
+   "edge_bps": 29.4,
+   "net_edge_bps": -0.6,
+   "score": 0.3983759365903471
+  },
+  {
+   "id": "pairs:SO/EXC",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.384,
+   "edge_bps": 40.1,
+   "net_edge_bps": 20.1,
+   "score": 0.38366909134886396
+  },
+  {
+   "id": "pairs:CL/CHD",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.367,
+   "edge_bps": 42.3,
+   "net_edge_bps": 22.3,
+   "score": 0.36714484699382505
+  },
+  {
+   "id": "equivalent:EFA/IEFA",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.343,
+   "edge_bps": 1.6,
+   "net_edge_bps": -18.4,
+   "score": 0.34337346493583853
+  },
+  {
+   "id": "adr:NTES/9999.HK",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.343,
+   "edge_bps": 19.2,
+   "net_edge_bps": -10.8,
+   "score": 0.3432057684579714
+  },
+  {
+   "id": "adr:SHOP/SHOP.TO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.339,
+   "edge_bps": 4.4,
+   "net_edge_bps": -25.6,
+   "score": 0.3393701023766064
+  },
+  {
+   "id": "adr:TM/7203.T",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.311,
+   "edge_bps": 15.9,
+   "net_edge_bps": -14.1,
+   "score": 0.3110525935900369
+  },
+  {
+   "id": "adr:SHEL/SHEL.L",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.302,
+   "edge_bps": 12.1,
+   "net_edge_bps": -17.9,
+   "score": 0.3020342700142573
+  },
+  {
+   "id": "pairs:PHM/TOL",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.259,
+   "edge_bps": 32.8,
+   "net_edge_bps": 12.8,
+   "score": 0.2590049009912857
+  },
+  {
+   "id": "adr:SAP/SAP.DE",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.256,
+   "edge_bps": 11.2,
+   "net_edge_bps": -18.8,
+   "score": 0.25648874992708665
+  },
+  {
+   "id": "pairs:LLY/ABBV",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.238,
+   "edge_bps": 88.8,
+   "net_edge_bps": 68.8,
+   "score": 0.23839256800646946
+  },
+  {
+   "id": "equivalent:QQQ/QQQM",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.236,
+   "edge_bps": 0.1,
+   "net_edge_bps": -19.9,
+   "score": 0.23635805385219796
+  },
+  {
+   "id": "adr:ENB/ENB.TO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.234,
+   "edge_bps": 3.0,
+   "net_edge_bps": -27.0,
+   "score": 0.23383789670806338
+  },
+  {
+   "id": "pairs:GPN/MA",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.217,
+   "edge_bps": 46.7,
+   "net_edge_bps": 26.7,
+   "score": 0.2169863991922852
+  },
+  {
+   "id": "equivalent:SPY/IVV",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.2,
+   "edge_bps": 0.2,
+   "net_edge_bps": -19.8,
+   "score": 0.1997744100710124
+  },
+  {
+   "id": "adr:TD/TD.TO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.196,
+   "edge_bps": 2.9,
+   "net_edge_bps": -27.1,
+   "score": 0.19600149591301405
+  },
+  {
+   "id": "pairs:AMD/NVDA",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.173,
+   "edge_bps": 68.4,
+   "net_edge_bps": 48.4,
+   "score": 0.17336180113319166
+  },
+  {
+   "id": "pairs:WEC/SO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.162,
+   "edge_bps": 12.7,
+   "net_edge_bps": -7.3,
+   "score": 0.16151597877147716
+  },
+  {
+   "id": "adr:BIDU/9888.HK",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.156,
+   "edge_bps": 16.7,
+   "net_edge_bps": -13.3,
+   "score": 0.15603543523350233
+  },
+  {
+   "id": "pairs:KLAC/TXN",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.129,
+   "edge_bps": 60.1,
+   "net_edge_bps": 40.1,
+   "score": 0.12915596858470238
+  },
+  {
+   "id": "pairs:PLD/PSA",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.121,
+   "edge_bps": 27.5,
+   "net_edge_bps": 7.5,
+   "score": 0.12136720599323714
+  },
+  {
+   "id": "adr:MUFG/8306.T",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.109,
+   "edge_bps": 5.9,
+   "net_edge_bps": -24.1,
+   "score": 0.1093678980665182
+  },
+  {
+   "id": "adr:BP/BP.L",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.081,
+   "edge_bps": 4.1,
+   "net_edge_bps": -25.9,
+   "score": 0.08148066622347508
+  },
+  {
+   "id": "merger:CSR",
+   "signal": "WATCH (below hurdle)",
+   "active": false,
+   "zscore": null,
+   "edge_bps": 222.0,
+   "net_edge_bps": 212.0,
+   "score": 0.0668
+  },
+  {
+   "id": "adr:RY/RY.TO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.065,
+   "edge_bps": 0.9,
+   "net_edge_bps": -29.1,
+   "score": 0.06523957048446936
+  },
+  {
+   "id": "equivalent:BRK-A/BRK-B",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.046,
+   "edge_bps": 0.4,
+   "net_edge_bps": -19.6,
+   "score": 0.046367378411582026
+  },
+  {
+   "id": "merger:BWIN",
+   "signal": "WATCH (below hurdle)",
+   "active": false,
+   "zscore": null,
+   "edge_bps": 226.6,
+   "net_edge_bps": 221.6,
+   "score": 0.0457
+  },
+  {
+   "id": "adr:CNQ/CNQ.TO",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": 0.043,
+   "edge_bps": 1.0,
+   "net_edge_bps": -29.0,
+   "score": 0.04314501471988433
+  },
+  {
+   "id": "adr:JD/9618.HK",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.042,
+   "edge_bps": 2.9,
+   "net_edge_bps": -27.1,
+   "score": 0.04222705789425337
+  },
+  {
+   "id": "equivalent:FOXA/FOX",
+   "signal": "FLAT (exit zone)",
+   "active": false,
+   "zscore": -0.04,
+   "edge_bps": 0.8,
+   "net_edge_bps": -19.2,
+   "score": 0.03963307929901207
+  },
+  {
+   "id": "merger:KVUE",
+   "signal": "WATCH (below hurdle)",
+   "active": false,
+   "zscore": null,
+   "edge_bps": 37.6,
+   "net_edge_bps": 27.6,
+   "score": 0.0148
+  },
+  {
+   "id": "merger:ACVA",
+   "signal": "WATCH (below hurdle)",
+   "active": false,
+   "zscore": null,
+   "edge_bps": 57.5,
+   "net_edge_bps": 52.5,
+   "score": 0.0115
+  },
+  {
+   "id": "merger:MG",
+   "signal": "TRADING ABOVE TERMS (bump expected?)",
+   "active": false,
+   "zscore": null,
+   "edge_bps": -463.9,
+   "net_edge_bps": -468.9,
+   "score": -0.1305
+  }
+ ]
+}

@@ -1,0 +1,80 @@
+{
+  "_comment": "Instrument universe for the arbitrage scanner. Edit freely; the daily scan re-reads this file.",
+
+  "equivalent_pairs": {
+    "_comment": "Two listings with (nearly) identical economic claims. 'ratio' = shares of b per share of a when the claims are identical (e.g. 1 BRK-A = 1500 BRK-B). The scanner trades deviations of price(a)/(ratio*price(b)) from its own trailing mean.",
+    "pairs": [
+      {"a": "GOOGL", "b": "GOOG",  "ratio": 1,    "kind": "share_class", "note": "Alphabet Class A (voting) vs Class C (non-voting)"},
+      {"a": "BRK-A", "b": "BRK-B", "ratio": 1500, "kind": "share_class", "note": "Berkshire A converts into 1500 B"},
+      {"a": "FOXA",  "b": "FOX",   "ratio": 1,    "kind": "share_class", "note": "Fox Class A (non-voting) vs Class B (voting)"},
+      {"a": "NWSA",  "b": "NWS",   "ratio": 1,    "kind": "share_class", "note": "News Corp Class A vs Class B"},
+      {"a": "LBRDK", "b": "LBRDA", "ratio": 1,    "kind": "share_class", "note": "Liberty Broadband C vs A"},
+      {"a": "UAA",   "b": "UA",    "ratio": 1,    "kind": "share_class", "note": "Under Armour A vs C"},
+      {"a": "LEN",   "b": "LEN-B", "ratio": 1,    "kind": "share_class", "note": "Lennar Class A vs B"},
+      {"a": "BF-B",  "b": "BF-A",  "ratio": 1,    "kind": "share_class", "note": "Brown-Forman B vs A"},
+      {"a": "HEI",   "b": "HEI-A", "ratio": 1,    "kind": "share_class", "note": "HEICO common vs Class A"},
+      {"a": "Z",     "b": "ZG",    "ratio": 1,    "kind": "share_class", "note": "Zillow Class C vs Class A"},
+      {"a": "MOG-A", "b": "MOG-B", "ratio": 1,    "kind": "share_class", "note": "Moog Class A vs B"},
+      {"a": "SPY",   "b": "IVV",   "ratio": 1,    "kind": "etf_twin",    "note": "S&P 500 ETFs (price levels differ; ratio is recalibrated)"},
+      {"a": "VOO",   "b": "IVV",   "ratio": 1,    "kind": "etf_twin",    "note": "S&P 500 ETFs"},
+      {"a": "QQQ",   "b": "QQQM",  "ratio": 1,    "kind": "etf_twin",    "note": "Nasdaq-100 ETFs"},
+      {"a": "GLD",   "b": "IAU",   "ratio": 1,    "kind": "etf_twin",    "note": "Physical gold trusts"},
+      {"a": "IWM",   "b": "VTWO",  "ratio": 1,    "kind": "etf_twin",    "note": "Russell 2000 ETFs"},
+      {"a": "EFA",   "b": "IEFA",  "ratio": 1,    "kind": "etf_twin",    "note": "Developed ex-US ETFs (slightly different index)"},
+      {"a": "TLT",   "b": "SPTL",  "ratio": 1,    "kind": "etf_twin",    "note": "Long Treasury ETFs (different index)"}
+    ]
+  },
+
+  "adr_pairs": {
+    "_comment": "US listing vs home-market listing. 'ratio' = home shares per US share; 'fx' = Yahoo FX ticker quoting home-currency units per 1 USD; 'scale' multiplies the home quote (0.01 for pence-quoted London lines). The scanner checks the configured ratio against the market-implied one and flags mismatches.",
+    "pairs": [
+      {"us": "TSM",  "home": "2330.TW",      "ratio": 5,   "fx": "TWD=X", "scale": 1,    "note": "TSMC; Taiwan ADR conversion is restricted, premium is persistent"},
+      {"us": "BABA", "home": "9988.HK",      "ratio": 8,   "fx": "HKD=X", "scale": 1,    "note": "Alibaba; fully fungible"},
+      {"us": "JD",   "home": "9618.HK",      "ratio": 2,   "fx": "HKD=X", "scale": 1,    "note": "JD.com"},
+      {"us": "BIDU", "home": "9888.HK",      "ratio": 8,   "fx": "HKD=X", "scale": 1,    "note": "Baidu"},
+      {"us": "NTES", "home": "9999.HK",      "ratio": 5,   "fx": "HKD=X", "scale": 1,    "note": "NetEase"},
+      {"us": "INFY", "home": "INFY.NS",      "ratio": 1,   "fx": "INR=X", "scale": 1,    "note": "Infosys; INR capital controls limit conversion"},
+      {"us": "HDB",  "home": "HDFCBANK.NS",  "ratio": 3,   "fx": "INR=X", "scale": 1,    "note": "HDFC Bank; foreign-ownership headroom keeps a premium"},
+      {"us": "IBN",  "home": "ICICIBANK.NS", "ratio": 2,   "fx": "INR=X", "scale": 1,    "note": "ICICI Bank"},
+      {"us": "WIT",  "home": "WIPRO.NS",     "ratio": 1,   "fx": "INR=X", "scale": 1,    "note": "Wipro"},
+      {"us": "SONY", "home": "6758.T",       "ratio": 1,   "fx": "JPY=X", "scale": 1,    "note": "Sony"},
+      {"us": "TM",   "home": "7203.T",       "ratio": 10,  "fx": "JPY=X", "scale": 1,    "note": "Toyota"},
+      {"us": "MUFG", "home": "8306.T",       "ratio": 1,   "fx": "JPY=X", "scale": 1,    "note": "Mitsubishi UFJ"},
+      {"us": "SHEL", "home": "SHEL.L",       "ratio": 2,   "fx": "GBP=X", "scale": 0.01, "note": "Shell (London quoted in pence)"},
+      {"us": "BP",   "home": "BP.L",         "ratio": 6,   "fx": "GBP=X", "scale": 0.01, "note": "BP"},
+      {"us": "HSBC", "home": "HSBA.L",       "ratio": 5,   "fx": "GBP=X", "scale": 0.01, "note": "HSBC"},
+      {"us": "RIO",  "home": "RIO.L",        "ratio": 1,   "fx": "GBP=X", "scale": 0.01, "note": "Rio Tinto plc"},
+      {"us": "UL",   "home": "ULVR.L",       "ratio": 1,   "fx": "GBP=X", "scale": 0.01, "note": "Unilever"},
+      {"us": "ASML", "home": "ASML.AS",      "ratio": 1,   "fx": "EUR=X", "scale": 1,    "note": "ASML NY registry shares"},
+      {"us": "SAP",  "home": "SAP.DE",       "ratio": 1,   "fx": "EUR=X", "scale": 1,    "note": "SAP"},
+      {"us": "NVO",  "home": "NOVO-B.CO",    "ratio": 1,   "fx": "DKK=X", "scale": 1,    "note": "Novo Nordisk"},
+      {"us": "TD",   "home": "TD.TO",        "ratio": 1,   "fx": "CAD=X", "scale": 1,    "note": "TD Bank interlisted"},
+      {"us": "RY",   "home": "RY.TO",        "ratio": 1,   "fx": "CAD=X", "scale": 1,    "note": "Royal Bank of Canada interlisted"},
+      {"us": "SHOP", "home": "SHOP.TO",      "ratio": 1,   "fx": "CAD=X", "scale": 1,    "note": "Shopify interlisted"},
+      {"us": "ENB",  "home": "ENB.TO",       "ratio": 1,   "fx": "CAD=X", "scale": 1,    "note": "Enbridge interlisted"},
+      {"us": "CNQ",  "home": "CNQ.TO",       "ratio": 1,   "fx": "CAD=X", "scale": 1,    "note": "Canadian Natural interlisted"}
+    ]
+  },
+
+  "pairs_groups": {
+    "_comment": "Statistical-arbitrage candidate groups. Every pair inside a group is tested for cointegration each day.",
+    "groups": {
+      "Megacap banks":     ["JPM", "BAC", "C", "WFC", "GS", "MS", "USB", "PNC", "TFC", "SCHW"],
+      "Integrated oil/E&P":["XOM", "CVX", "COP", "EOG", "OXY", "DVN", "FANG", "MPC", "PSX", "VLO"],
+      "Semiconductors":    ["NVDA", "AMD", "AVGO", "QCOM", "TXN", "ADI", "MU", "INTC", "MCHP", "NXPI", "LRCX", "AMAT", "KLAC"],
+      "Payments":          ["V", "MA", "AXP", "PYPL", "COF", "FIS", "GPN"],
+      "Home improvement / retail": ["HD", "LOW", "WMT", "TGT", "COST", "DG", "DLTR", "BJ"],
+      "Beverages & staples": ["KO", "PEP", "KDP", "MDLZ", "PG", "CL", "KMB", "CHD", "GIS"],
+      "Railroads & freight": ["UNP", "CSX", "NSC", "CP", "CNI", "ODFL", "JBHT"],
+      "Telecom":           ["T", "VZ", "TMUS", "CMCSA", "CHTR"],
+      "Airlines":          ["DAL", "UAL", "AAL", "LUV", "ALK", "JBLU"],
+      "Utilities":         ["NEE", "DUK", "SO", "D", "AEP", "EXC", "XEL", "ED", "PEG", "WEC"],
+      "Big pharma":        ["PFE", "MRK", "JNJ", "ABBV", "BMY", "LLY", "AMGN", "GILD"],
+      "REITs":             ["PLD", "AMT", "CCI", "EQIX", "PSA", "O", "SPG", "WELL", "AVB", "EQR"],
+      "Insurance":         ["TRV", "ALL", "PGR", "CB", "AIG", "HIG", "MET", "PRU"],
+      "Defense":           ["LMT", "NOC", "GD", "RTX", "LHX", "HII"],
+      "Homebuilders":      ["DHI", "LEN", "PHM", "NVR", "TOL", "KBH"],
+      "Card networks & exchanges": ["ICE", "CME", "NDAQ", "CBOE", "MKTX", "SPGI", "MCO", "MSCI"]
+    }
+  }
+}

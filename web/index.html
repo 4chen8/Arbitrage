@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arbitrage Monitor</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Arbitrage Monitor</h1>
+    <span class="sub">NYSE · Nasdaq</span>
+  </div>
+  <div class="status">
+    <span id="market" class="pill">—</span>
+    <span id="stamp" class="muted">loading…</span>
+    <button id="btn-refresh" class="btn" title="Re-price all signals with live quotes now">Refresh prices</button>
+    <button id="btn-scan" class="btn btn-ghost" title="Recalibrate every strategy from daily history">Run daily scan</button>
+  </div>
+</header>
+
+<main>
+  <section class="tiles" id="tiles"></section>
+
+  <section class="controls">
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" data-s="" class="tab on">All</button>
+      <button role="tab" data-s="equivalent" class="tab">Share class &amp; ETF</button>
+      <button role="tab" data-s="adr" class="tab">ADR</button>
+      <button role="tab" data-s="pairs" class="tab">Stat-arb pairs</button>
+      <button role="tab" data-s="merger" class="tab">Merger</button>
+    </div>
+    <div class="filters">
+      <label class="check"><input type="checkbox" id="active-only"> Active signals only</label>
+      <input type="search" id="q" placeholder="Filter by ticker…" aria-label="Filter by ticker">
+    </div>
+  </section>
+
+  <div class="layout">
+    <section class="table-wrap">
+      <table id="grid">
+        <thead>
+          <tr>
+            <th class="hide-sm">Strategy</th><th>Instrument</th><th>Signal</th>
+            <th class="num" title="Z-score of the spread, or annualized return for merger deals">Z / Ann.</th>
+            <th class="num" title="Deviation of the spread from its mean (merger: gross spread to deal value)">Dev. / Spread</th>
+            <th class="num" title="Expected capture minus estimated round-trip costs">Net edge</th>
+            <th class="num hide-sm">Info</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <p id="empty" class="muted empty" hidden>No opportunities match.</p>
+    </section>
+
+    <aside id="detail" class="detail" hidden>
+      <div class="detail-head">
+        <div>
+          <div id="d-strategy" class="muted small"></div>
+          <h2 id="d-name"></h2>
+        </div>
+        <button class="btn btn-ghost" id="d-close" aria-label="Close details">✕</button>
+      </div>
+      <div id="d-signal" class="d-signal"></div>
+      <figure class="chart">
+        <figcaption id="d-chart-title" class="small muted"></figcaption>
+        <div id="d-chart"></div>
+      </figure>
+      <h3>Legs</h3>
+      <table class="legs"><thead><tr><th>Symbol</th><th>Side</th><th class="num">Qty / 1 unit</th><th class="num">Price</th></tr></thead><tbody id="d-legs"></tbody></table>
+      <h3>Metrics</h3>
+      <dl id="d-metrics" class="metrics"></dl>
+      <p id="d-notes" class="small"></p>
+      <ul id="d-warn" class="warn"></ul>
+    </aside>
+  </div>
+
+  <p class="disclaimer small muted">
+    Signals are statistical estimates from public, possibly delayed data (Yahoo Finance). They are not
+    risk-free arbitrage: spreads can widen further, deals can break, borrow can be unavailable, and
+    foreign lines may be closed or non-convertible. Verify prices and terms with your broker before trading.
+  </p>
+</main>
+
+<div id="tip" class="tip" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

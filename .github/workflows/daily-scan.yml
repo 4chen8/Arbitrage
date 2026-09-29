@@ -1,0 +1,41 @@
+name: Daily arbitrage scan
+
+on:
+  schedule:
+    # 22:05 UTC on weekdays = 6:05 pm EDT / 5:05 pm EST, after the US close.
+    - cron: "5 22 * * 1-5"
+  workflow_dispatch:
+  push:
+    paths: ["arbitrage/**", "tests/**", "config/**", "requirements.txt"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Tests
+        run: python -m pytest -q
+      - name: Scan
+        if: github.event_name != 'push'
+        run: python -m arbitrage.scanner
+      - name: Commit snapshot
+        if: github.event_name != 'push'
+        run: |
+          git config user.name "arbitrage-bot"
+          git config user.email "arbitrage-bot@users.noreply.github.com"
+          git add data/
+          if git diff --cached --quiet; then echo "No changes"; exit 0; fi
+          git commit -m "Daily scan $(date -u +%Y-%m-%d)"
+          git push

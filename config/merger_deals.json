@@ -1,0 +1,12 @@
+{
+  "_comment": "Pending M&A deals for merger-arbitrage spreads. Terms change (bumps, collars, breaks) - verify against the latest 8-K / proxy before trading and keep this file current. cash = cash per target share; stock_ratio = acquirer shares per target share; expected_close is an estimate used only for annualizing.",
+  "updated": "2026-09-29",
+  "deals": [
+    {"target": "ACVA", "acquirer": "CPRT", "cash": 10.50, "stock_ratio": 0,       "expected_close": "2027-03-31", "announced": "2026-09-10", "source": "https://www.sec.gov/Archives/edgar/data/0000900075/000119312526388064/d138322dex991.htm"},
+    {"target": "BWIN", "acquirer": null,   "cash": 32.50, "stock_ratio": 0,       "expected_close": "2027-03-31", "announced": "2026-09-14", "source": "https://coverager.com/the-baldwin-group-to-go-private-in-7-7-billion-deal/", "note": "Take-private by Sequence Holdings / DFO Management"},
+    {"target": "CSR",  "acquirer": "IRT",  "cash": 0,     "stock_ratio": 3.8,     "expected_close": "2027-01-31", "announced": "2026-09-09", "source": "https://www.sec.gov/Archives/edgar/data/0001466085/000143774926029903/irt20260909c_8k.htm"},
+    {"target": "MG",   "acquirer": null,   "cash": 20.35, "stock_ratio": 0,       "expected_close": "2027-01-31", "announced": "2026-09-18", "source": "https://finviz.com/news/393454/mistras-group-inc-enters-into-definitive-agreement-to-be-acquired-by-hig-capital-for-2035-per-share-in-cash", "note": "H.I.G. Capital take-private; 40-day go-shop ends 2026-10-27 (market may price a topping bid)"},
+    {"target": "PRTH", "acquirer": null,   "cash": 8.05,  "stock_ratio": 0,       "expected_close": "2027-01-31", "announced": "2026-09", "source": "https://www.insidearbitrage.com/category/new-merger-announcements/", "note": "CEO-led investor group"},
+    {"target": "KVUE", "acquirer": "KMB",  "cash": 3.50,  "stock_ratio": 0.14625, "expected_close": "2026-12-31", "announced": "2025-11-03", "source": "https://www.sec.gov/Archives/edgar/data/0001944048/000194404826000142/kvue-20260628.htm"}
+  ]
+}

@@ -1,0 +1,9 @@
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.26
+statsmodels>=0.14
+fastapi>=0.110
+uvicorn>=0.29
+apscheduler>=3.10
+pytest>=8.0
+httpx>=0.27
